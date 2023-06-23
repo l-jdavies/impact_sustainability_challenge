@@ -1,7 +1,6 @@
-import { Columns, ElectricityData } from "@/types";
+import { Columns } from "@/types";
 import React from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
-import { Typography } from "@material-tailwind/react";
 import {
   renderAmountCell,
   renderDateCell,
@@ -14,7 +13,7 @@ import {
 /* data needs to have any type, rather than ElectricityData to prevent Typescript throwing an error for react-table */
 const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
   const PAGE_SIZE = 25;
-  
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -73,13 +72,9 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
                     key={idx}
                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4 bg-[#F5F8FB]"
                   >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-bold leading-none opacity-70"
-                    >
+                    <p className="font-bold leading-none opacity-70">
                       {column.render("Header")}
-                    </Typography>
+                    </p>
                   </th>
                 ))
               )}
@@ -96,13 +91,7 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
                       key={idx}
                       className="p-4 border-b border-blue-gray-50"
                     >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {formatCellData(cell)}
-                      </Typography>
+                      <p className="font-normal">{formatCellData(cell)}</p>
                     </td>
                   ))}
                 </tr>
