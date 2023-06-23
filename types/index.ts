@@ -9,3 +9,8 @@ export type ElectricityData = {
   amountPaid: number
   emissions: number
 }
+
+export type Columns = {
+  Header: string
+  accessor: string
+}
