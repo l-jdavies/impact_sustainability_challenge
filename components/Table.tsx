@@ -1,10 +1,19 @@
 import { Columns } from "@/types";
-import React, { useState } from "react";
+import React from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
 import { Typography } from "@material-tailwind/react";
+import {
+  renderAmountCell,
+  renderDateCell,
+  renderEmissionsCell,
+  renderGreenPowerCell,
+  renderMeterIdCell,
+  renderUsageCell,
+} from "@/lib";
 
 /* data needs to have any type, rather than ElectricityData to prevent Typescript throwing an error for react-table */
 const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
+  const PAGE_SIZE = 25;
   const {
     getTableProps,
     getTableBodyProps,
@@ -13,7 +22,6 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
     prepareRow,
     canPreviousPage,
     canNextPage,
-    pageOptions,
     nextPage,
     previousPage,
     state: { pageIndex, pageSize, selectedRowIds },
@@ -22,16 +30,30 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 25, selectedRowIds: {} },
+      initialState: { pageIndex: 0, pageSize: PAGE_SIZE, selectedRowIds: {} },
     },
     usePagination,
     useRowSelect
   );
 
-  // Custom rendering function for the "Meter ID" column
-  const renderMeterIdCell = (cell: any) => {
-    const meterId = cell.value;
-    return <span>NMI {meterId}</span>;
+  const formatCellData = (cell: any) => {
+    switch (cell.column.id) {
+      case "meterId":
+        return renderMeterIdCell(cell);
+      case "startDate":
+      case "endDate":
+        return renderDateCell(cell);
+      case "usage":
+        return renderUsageCell(cell);
+      case "greenPower":
+        return renderGreenPowerCell(cell);
+      case "amountPaid":
+        return renderAmountCell(cell);
+      case "emissions":
+        return renderEmissionsCell(cell);
+      default:
+        return cell.render("Cell");
+    }
   };
 
   return (
@@ -77,9 +99,7 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {cell.column.id === "meterId" // Check if it's the "Meter ID" column
-                        ? renderMeterIdCell(cell) // Custom rendering for "Meter ID" column
-                        : cell.render("Cell")}
+                      {formatCellData(cell)}
                     </Typography>
                   </td>
                 ))}
@@ -92,7 +112,7 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
       <div className="flex justify-between p-5 m-5">
         <div>
           <p className="text-[#5A6170]">
-            {(pageIndex + 1) * pageSize} of {data.length} results
+            {(pageIndex + 1) * PAGE_SIZE} of {data.length} results
           </p>
         </div>
         <div className="ml-3 bg-[#FFFFFF] space-x-3 mx-2 px-1 text-[#5A6170] rounded-md border">
