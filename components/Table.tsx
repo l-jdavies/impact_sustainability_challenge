@@ -1,4 +1,4 @@
-import { Columns } from "@/types";
+import { Columns, ElectricityData } from "@/types";
 import React from "react";
 import { useTable, useRowSelect, usePagination } from "react-table";
 import { Typography } from "@material-tailwind/react";
@@ -13,7 +13,8 @@ import {
 
 /* data needs to have any type, rather than ElectricityData to prevent Typescript throwing an error for react-table */
 const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
-  const PAGE_SIZE = 5;
+  const PAGE_SIZE = 25;
+  
   const {
     getTableProps,
     getTableBodyProps,

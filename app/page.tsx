@@ -1,8 +1,9 @@
 "use client";
 import Table from "@/components/Table";
+import Loading from "@/components/loading";
 import { fetchAllElectricity } from "@/fetch";
 import { ElectricityData } from "@/types";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 
 const TablePage = () => {
   const [electricityData, setElectricityData] = useState<ElectricityData[]>();
@@ -42,7 +43,7 @@ const TablePage = () => {
             <input type="checkbox" {...row.getToggleRowSelectedProps()} />
           </div>
         ),
-        accessor: ""
+        accessor: "",
       },
       { Header: "Location", accessor: "location" },
       { Header: "Meter ID", accessor: "meterId" },
@@ -62,7 +63,7 @@ const TablePage = () => {
       {electricityData ? (
         <Table columns={columns} data={electricityData} />
       ) : (
-        <div>Loading...</div>
+        <Loading />
       )}
     </>
   );

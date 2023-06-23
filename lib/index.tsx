@@ -1,4 +1,4 @@
-// Custom rendering function for the "Meter ID" column
+/* functions that return formatted cells */
 export const renderMeterIdCell = (cell: any) => {
   const meterId = cell.value;
   return <span>NMI {meterId}</span>;
