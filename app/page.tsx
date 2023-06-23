@@ -1,9 +1,9 @@
 "use client";
 import Table from "@/components/Table";
-import Loading from "@/components/loading";
 import { fetchAllElectricity } from "@/fetch";
 import { ElectricityData } from "@/types";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Loading from "./loading";
 
 const TablePage = () => {
   const [electricityData, setElectricityData] = useState<ElectricityData[]>();
