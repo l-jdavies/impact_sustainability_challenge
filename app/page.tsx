@@ -22,6 +22,28 @@ const TablePage = () => {
 
   const columns = useMemo(
     () => [
+      {
+        id: "selection",
+        // The header can use the table's getToggleAllRowsSelectedProps method
+        // to render a checkbox
+        Header: ({
+          getToggleAllRowsSelectedProps,
+        }: {
+          getToggleAllRowsSelectedProps: any;
+        }) => (
+          <div>
+            <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
+        // The cell can use the individual row's getToggleRowSelectedProps method
+        // to the render a checkbox
+        Cell: ({ row }: { row: any }) => (
+          <div>
+            <input type="checkbox" {...row.getToggleRowSelectedProps()} />
+          </div>
+        ),
+        accessor: ""
+      },
       { Header: "Location", accessor: "location" },
       { Header: "Meter ID", accessor: "meterId" },
       { Header: "Start Date", accessor: "startDate" },
