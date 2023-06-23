@@ -1,34 +1,44 @@
 import { Columns } from "@/types";
 import React, { useState } from "react";
-import { useTable, useRowSelect } from "react-table";
+import { useTable, useRowSelect, usePagination } from "react-table";
 import { Typography } from "@material-tailwind/react";
 
 /* data needs to have any type, rather than ElectricityData to prevent Typescript throwing an error for react-table */
 const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
-  const [selectAll, setSelectAll] = useState(false);
-
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
+    page,
     prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    nextPage,
+    previousPage,
+    state: { pageIndex, pageSize, selectedRowIds },
     toggleAllRowsSelected,
-    state: { selectedRowIds },
   } = useTable(
     {
       columns,
       data,
-      initialState: { selectedRowIds: {} },
+      initialState: { pageIndex: 0, pageSize: 25, selectedRowIds: {} },
     },
+    usePagination,
     useRowSelect
   );
 
+  // Custom rendering function for the "Meter ID" column
+  const renderMeterIdCell = (cell: any) => {
+    const meterId = cell.value;
+    return <span>NMI {meterId}</span>;
+  };
+
   return (
-    <div className="flex items-center justify-center p-6">
+    <div className="flex items-center flex-col justify-center p-6">
       <table
         {...getTableProps()}
-        className="w-3/4 h-3/4 table-auto text-left bg-[#FFFFFF] rounded-lg shadow-md"
+        className="overflow-scroll w-3/4 h-3/4 table-auto text-left bg-[#FFFFFF] rounded-lg shadow-md"
       >
         <thead>
           <tr>
@@ -52,7 +62,7 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
           </tr>
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, idx) => {
+          {page.map((row, idx) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} key={idx}>
@@ -67,7 +77,9 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {cell.render("Cell")}
+                      {cell.column.id === "meterId" // Check if it's the "Meter ID" column
+                        ? renderMeterIdCell(cell) // Custom rendering for "Meter ID" column
+                        : cell.render("Cell")}
                     </Typography>
                   </td>
                 ))}
@@ -76,6 +88,22 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
           })}
         </tbody>
       </table>
+
+      <div className="flex justify-between p-5 m-5">
+        <div>
+          <p className="text-[#5A6170]">
+            {(pageIndex + 1) * pageSize} of {data.length} results
+          </p>
+        </div>
+        <div className="ml-3 bg-[#FFFFFF] space-x-3 mx-2 px-1 text-[#5A6170] rounded-md border">
+          <button onClick={previousPage} disabled={!canPreviousPage}>
+            &lt;
+          </button>
+          <button onClick={nextPage} disabled={!canNextPage}>
+            &gt;
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
