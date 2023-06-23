@@ -21,25 +21,9 @@ const Table = ({ columns, data }: { columns: Columns[]; data: any }) => {
       data,
       initialState: { selectedRowIds: {} },
     },
-    useRowSelect // Enable row selection
+    useRowSelect
   );
 
-  const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectAll(false);
-      toggleAllRowsSelected(false);
-    } else {
-      setSelectAll(true);
-      toggleAllRowsSelected(true);
-    }
-  };
-
-  useEffect(() => {
-    // Check if all rows are selected
-    const areAllRowsSelected =
-      rows.length > 0 && selectedFlatRows.length === rows.length;
-    setSelectAll(areAllRowsSelected);
-  }, [selectedFlatRows, rows]);
 
   return (
     <table {...getTableProps()} className="table container">
